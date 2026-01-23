@@ -1,0 +1,24 @@
+//Aufgabe 3 Daten und Codierung
+
+//In Java wird der Datentyp char verwendet, um ein 
+//einzelnes Zeichen zu speichern. Das Zeichen wird gemäß 
+//ASCII als Zahl gespeichert. 
+
+//a) Ergänze passende Bedingungen in dem Sketch. 
+//b) Erweitere das Programm so, dass es Klein- und 
+//Großbuchstaben ineinander umwandeln kann. 
+
+
+char zeichen = 'X'; 
+if ( ___ ) { 
+ println(zeichen + " ist ein Kleinbuchstabe."); 
+} 
+else if ( ___ ) { 
+ println(zeichen + " ist ein Großbuchstabe."); 
+} 
+else if ( ___ ) { 
+ println(zeichen + " ist eine Ziffer."); 
+} 
+else { 
+ println(zeichen + " ist ein anderes Zeichen."); 
+}
