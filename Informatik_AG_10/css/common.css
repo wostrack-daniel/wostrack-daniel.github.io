@@ -9,13 +9,13 @@ summary { list-style: none; }
 summary::-webkit-details-marker { display: none; }
 
 /* Navbar */
-.navbar { display: flex; align-items: center; justify-content: space-between; background: #f1f1f1; padding: 12px 16px; }
+.navbar { position: relative; display: flex; align-items: center; justify-content: space-between; background: #f1f1f1; padding: 12px 16px; }
 .navbar .brand { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 18px; }
 .navbar .brand img { width: 30px; height: 30px; }
 
-.menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; }
+.menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); white-space: nowrap; overflow: hidden; }
 .menu-item { position: relative; }
-.menu-link { display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: black; text-decoration: none; border-radius: 6px; }
+.menu-link { display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: black; text-decoration: none; border-radius: 6px; flex-shrink: 1; min-width: 0; }
 .menu-link:hover { background: #ddd; }
 
 /* icons */
@@ -37,6 +37,10 @@ summary::-webkit-details-marker { display: none; }
     .submenu { position: absolute; left: 0; top: calc(100% + 6px); width: 100%; min-width: unset; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 6px; display: none; z-index: 30; }
     .menu-item:hover > .submenu { display: block; }
 }
+
+/* Compact state: when there is not enough room, reduce gaps/padding so tabs move closer */
+.menu.compact { gap: 4px; }
+.menu.compact .menu-link { padding: 6px 8px; }
 
 /* small helper for inline svg color */
 .menu-link .icon { color: #333; }
@@ -175,6 +179,49 @@ summary::-webkit-details-marker { display: none; }
 /* kleinere Variante für sehr kleine Bildschirme */
 @media screen and (max-width: 420px) {
     #header-profile-icon { width: 30px; height: 30px; }
+}
+
+/* Container für Header-Profil (Icon + Pill) */
+#header-profile-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 8px;
+}
+
+/* Pill mit dem Profilnamen: standardmäßig versteckt (auf 0 Breite), bei Hover fährt sie mit Slide-Animation aus */
+
+#header-profile-pill {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 0; /* zusammengeklappt */
+    opacity: 0;
+    transform: translateX(6px);
+    transition: max-width 260ms ease, opacity 200ms ease 60ms, transform 220ms ease, padding 200ms ease;
+    padding: 0; /* padding erst in sichtbarem Zustand setzen */
+    border-radius: 999px;
+    border: 2px solid #000; /* Umrandung */
+    background: inherit; /* gleiche Farbe wie Navbar-Hintergrund */
+    font-size: 14px;
+    line-height: 1;
+    color: #000;
+}
+
+/* sichtbarer Zustand der Pill */
+#header-profile-pill.visible {
+    max-width: 240px; /* genug Platz für Namen */
+    opacity: 1;
+    transform: translateX(0);
+    padding: 6px 12px;
+}
+
+/* Wenn Container gehovt wird, die Pill ausfahren */
+#header-profile-container:hover #header-profile-pill { max-width: 240px; opacity: 1; transform: translateX(0); }
+
+/* kleine Darstellung auf sehr kleinen Bildschirmen */
+@media screen and (max-width: 420px) {
+    #header-profile-pill { font-size: 13px; padding: 5px 10px; }
 }
 
 /* ====== ENDE GEMEINSAME STYLES ====== */

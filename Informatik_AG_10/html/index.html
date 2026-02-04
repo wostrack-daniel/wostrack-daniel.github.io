@@ -5,15 +5,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informatik Dateien</title>
 
-    <!-- Gemeinsame Styles -->
-    <link rel="stylesheet" href="/Informatik_AG_10/css/common.css">
-    
-    <!-- Menü-Konfiguration -->
-    <script src="/Informatik_AG_10/js/menuConfig.js"></script>
+    <!-- ====== MENÜ-KONFIGURATION ====== -->
+    <!-- Ändere hier die Namen und Links der Menüreiter -->
+    <script>
+        const menuConfig = {
+            items: [
+                {
+                    id: 'home',
+                    label: 'Home',
+                    href: '#home',
+                    submenu: [
+                        { label: 'Übersicht', href: '#' },
+                        { label: 'Letzte Änderungen', href: '#' },
+                        { label: 'Schnelllinks', href: '#' }
+                    ]
+                },
+                {
+                    id: 'kurse',
+                    label: 'Kurse',
+                    href: '#kurse',
+                    submenu: [
+                        { label: 'Brückenkurs Klasse 10', href: '#' },
+                        { label: 'Informatik KS1', href: '#' },
+                        { label: 'Informatik KS2', href: '#' }
+                    ]
+                },
+                {
+                    id: 'downloads',
+                    label: 'Downloads',
+                    href: '#downloads',
+                    submenu: [
+                        { label: 'Schulanwendungen', href: '#' },
+                        { label: 'Open Source', href: '#' },
+                        { label: 'Vorlagen', href: '#' }
+                    ]
+                },
+                {
+                    id: 'login',
+                    label: 'Login',
+                    href: '#login',
+                    submenu: [
+                        { label: 'Kontakt', href: '#' },
+                        { label: 'Impressum', href: '#' },
+                        { label: 'Version', href: '#' }
+                    ]
+                }
+            ]
+        };
+    </script>
+    <!-- ====== ENDE MENÜ-KONFIGURATION ====== -->
 </head>
 
 <style>
-    /* Spezifische Styles für die Startseite */
+    /* General reset */
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+
+    /* Keep existing details/summary tweaks */
+    summary { list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+
+    /* Navbar */
+    .navbar { display: flex; align-items: center; justify-content: space-between; background: #f1f1f1; padding: 12px 16px; }
+    .navbar .brand { display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 18px; }
+    .navbar .brand img { width: 30px; height: 30px; }
+
+    .menu { list-style: none; margin: 0; padding: 0; display: flex; gap: 8px; }
+    .menu-item { position: relative; }
+    .menu-link { display: flex; align-items: center; gap: 8px; padding: 8px 12px; color: black; text-decoration: none; border-radius: 6px; }
+    .menu-link:hover { background: #ddd; }
+
+    /* icons */
+    .icon, .sicon { display: inline-flex; width: 18px; height: 18px; align-items: center; justify-content: center; }
+    .icon svg, .sicon svg { width: 100%; height: 100%; fill: currentColor; }
+
+    /* Submenu (dropdown) */
+    .submenu { position: absolute; left: 0; top: calc(100% + 6px); min-width: 180px; background: white; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 6px; padding: 6px 6px; display: none; z-index: 30; }
+    .submenu li { list-style: none; }
+    .submenu a { display: flex; gap: 8px; align-items: center; padding: 8px 10px; color: #222; text-decoration: none; border-radius: 4px; }
+    .submenu a:hover { background: #f4f4f4; }
+
+    /* show on hover */
+    .menu-item:hover > .submenu { display: block; }
+
+    @media screen and (max-width: 700px) {
+        .menu { gap: 4px; flex-wrap: wrap; position: relative; }
+        .menu-item { position: static; }
+        .submenu { position: absolute; left: 0; top: calc(100% + 6px); width: 100%; min-width: unset; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 6px; display: none; z-index: 30; }
+        .menu-item:hover > .submenu { display: block; }
+    }
+
+    /* small helper for inline svg color */
+    .menu-link .icon { color: #333; }
+    .submenu a .sicon { color: #666; }
+
+    /* Icon definitions - einfach änderbar */
+    :root {
+        --icon-home: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l9 8h-3v8h-12v-8h-3z" fill="%23333"/></svg>');
+        --icon-kurse: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16v6h-16zM4 12h8v8h-8z" fill="%23333"/></svg>');
+        --icon-downloads: url("/Informatik_AG_10/assets/images/icon/user interface/download\ \(5\).png");
+        --icon-login: url("/Informatik_AG_10/assets/images/icon/user interface/user.png");
+    }
+
+    /* Menüreiter Icons mit CSS-Variablen */
+    .menu-item:nth-child(1) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-home); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(2) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-kurse); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(3) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-downloads); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(4) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-login); background-size: contain; background-repeat: no-repeat; }
+
 </style>
 
 <body>
@@ -141,22 +240,64 @@
     </details> 
     
     <script src="/Informatik_AG_10/js/script.js"></script>
-    <script src="/Informatik_AG_10/js/login.js"></script>
 
-    <!-- Menü-Generator Initialisierung -->
+    <!-- Menü-Generator aus Konfiguration -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Prüfe ob Nutzer bereits angemeldet ist
-            const savedUser = localStorage.getItem('currentUser');
-            if (savedUser) {
-                currentUser = JSON.parse(savedUser);
-            }
+            const menuContainer = document.querySelector('.menu');
+            if (!menuContainer) return;
 
-            // Generiere das Menü
-            generateMenuFromConfig();
-            
-            // Initialisiere Login-UI
-            updateLoginUI();
+            // Leere das alte Menü
+            menuContainer.innerHTML = '';
+
+            // Generiere das Menü aus der Konfiguration
+            menuConfig.items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'menu-item';
+                
+                // Menü-Link
+                const link = document.createElement('a');
+                link.className = 'menu-link' + (index === 0 ? ' active' : '');
+                link.href = item.href;
+                
+                const icon = document.createElement('span');
+                icon.className = 'icon';
+                
+                const label = document.createElement('span');
+                label.textContent = item.label;
+                
+                link.appendChild(icon);
+                link.appendChild(label);
+                li.appendChild(link);
+
+                // Submenu
+                if (item.submenu && item.submenu.length > 0) {
+                    const submenu = document.createElement('ul');
+                    submenu.className = 'submenu';
+                    
+                    item.submenu.forEach(subitem => {
+                        const subli = document.createElement('li');
+                        const sublink = document.createElement('a');
+                        sublink.href = subitem.href;
+                        
+                        const sicon = document.createElement('span');
+                        sicon.className = 'sicon';
+                        sicon.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+                        
+                        const sublabel = document.createElement('span');
+                        sublabel.textContent = subitem.label;
+                        
+                        sublink.appendChild(sicon);
+                        sublink.appendChild(sublabel);
+                        subli.appendChild(sublink);
+                        submenu.appendChild(subli);
+                    });
+                    
+                    li.appendChild(submenu);
+                }
+
+                menuContainer.appendChild(li);
+            });
         });
     </script>
 
