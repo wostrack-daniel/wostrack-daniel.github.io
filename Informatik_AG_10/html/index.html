@@ -39,9 +39,10 @@
     .menu-item:hover > .submenu { display: block; }
 
     @media screen and (max-width: 700px) {
-        .menu { gap: 4px; }
-        .submenu { position: static; box-shadow: none; }
-        .menu { flex-wrap: wrap; }
+        .menu { gap: 4px; flex-wrap: wrap; position: relative; }
+        .menu-item { position: static; }
+        .submenu { position: absolute; left: 0; top: calc(100% + 6px); width: 100%; min-width: unset; box-shadow: 0 6px 18px rgba(0,0,0,0.12); border-radius: 6px; display: none; z-index: 30; }
+        .menu-item:hover > .submenu { display: block; }
     }
 
     /* small helper for inline svg color */
