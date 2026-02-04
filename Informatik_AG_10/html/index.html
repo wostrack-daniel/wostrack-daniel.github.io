@@ -4,6 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Informatik Dateien</title>
+
+    <!-- ====== MENÜ-KONFIGURATION ====== -->
+    <!-- Ändere hier die Namen und Links der Menüreiter -->
+    <script>
+        const menuConfig = {
+            items: [
+                {
+                    id: 'home',
+                    label: 'Home',
+                    href: '#home',
+                    submenu: [
+                        { label: 'Übersicht', href: '#' },
+                        { label: 'Letzte Änderungen', href: '#' },
+                        { label: 'Schnelllinks', href: '#' }
+                    ]
+                },
+                {
+                    id: 'kurse',
+                    label: 'Kurse',
+                    href: '#kurse',
+                    submenu: [
+                        { label: 'Brückenkurs Klasse 10', href: '#' },
+                        { label: 'Informatik KS1', href: '#' },
+                        { label: 'Informatik KS2', href: '#' }
+                    ]
+                },
+                {
+                    id: 'downloads',
+                    label: 'Downloads',
+                    href: '#downloads',
+                    submenu: [
+                        { label: 'Schulanwendungen', href: '#' },
+                        { label: 'Open Source', href: '#' },
+                        { label: 'Vorlagen', href: '#' }
+                    ]
+                },
+                {
+                    id: 'login',
+                    label: 'Login',
+                    href: '#login',
+                    submenu: [
+                        { label: 'Kontakt', href: '#' },
+                        { label: 'Impressum', href: '#' },
+                        { label: 'Version', href: '#' }
+                    ]
+                }
+            ]
+        };
+    </script>
+    <!-- ====== ENDE MENÜ-KONFIGURATION ====== -->
 </head>
 
 <style>
@@ -49,6 +99,123 @@
     .menu-link .icon { color: #333; }
     .submenu a .sicon { color: #666; }
 
+    /* Login Modal / Dropdown Styles */
+    .login-dropdown {
+        position: absolute !important;
+        left: 0 !important;
+        top: calc(100% + 6px) !important;
+        min-width: 300px !important;
+        background: white;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        border-radius: 6px;
+        padding: 20px !important;
+        display: none;
+        z-index: 30;
+    }
+
+    .login-dropdown.show { display: block !important; }
+
+    .login-form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .login-form input {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+    }
+
+    .login-form input:focus {
+        outline: none;
+        border-color: #0066cc;
+        box-shadow: 0 0 4px rgba(0, 102, 204, 0.3);
+    }
+
+    .login-form button {
+        padding: 10px;
+        background: #0066cc;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+    }
+
+    .login-form button:hover {
+        background: #0052a3;
+    }
+
+    .login-status {
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .login-status.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .login-status.error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .login-user-info {
+        background: #e7f3ff;
+        border: 1px solid #b3d9ff;
+        border-radius: 4px;
+        padding: 10px;
+        text-align: center;
+        margin-bottom: 10px;
+        font-size: 13px;
+    }
+
+    .login-user-info strong {
+        display: block;
+        color: #0066cc;
+        margin-bottom: 5px;
+    }
+
+    .logout-btn {
+        padding: 8px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .logout-btn:hover {
+        background: #c82333;
+    }
+
+    /* Icon definitions - einfach änderbar */
+    :root {
+        --icon-home: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l9 8h-3v8h-12v-8h-3z" fill="%23333"/></svg>');
+        --icon-kurse: url('data:image/svg+xml;utf8,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 4h16v6h-16zM4 12h8v8h-8z" fill="%23333"/></svg>');
+        --icon-downloads: url("/Informatik_AG_10/assets/images/icon/user interface/download\ \(5\).png");
+        --icon-login: url("/Informatik_AG_10/assets/images/icon/user interface/user.png");
+    }
+
+    /* Menüreiter Icons mit CSS-Variablen */
+    .menu-item:nth-child(1) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-home); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(2) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-kurse); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(3) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-downloads); background-size: contain; background-repeat: no-repeat; }
+    .menu-item:nth-child(4) .icon::before { content: ''; display: block; width: 100%; height: 100%; background-image: var(--icon-login); background-size: contain; background-repeat: no-repeat; }
+
 </style>
 
 <body>
@@ -59,53 +226,7 @@
             </div>
 
             <ul class="menu">
-                <li class="menu-item">
-                    <a class="menu-link active" href="#home">
-                        <span class="icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 3l9 8h-3v8h-12v-8h-3z"/></svg></span>
-                        Home
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg></span> Übersicht</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="12" rx="2"/></svg></span> Letzte Änderungen</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M4 6h16v2h-16zM4 12h10v2h-10zM4 18h7v2h-7z"/></svg></span> Schnelllinks</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <a class="menu-link" href="#kurse">
-                        <span class="icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v6h-16zM4 12h8v8h-8z"/></svg></span>
-                        Kurse
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M3 6h18v2h-18zM3 10h18v2h-18z"/></svg></span> Brückenkurs Klasse 10</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M3 6h18v2h-18zM3 10h12v2h-12z"/></svg></span> Informatik KS1</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M3 6h18v2h-18zM3 10h6v2h-6z"/></svg></span> Informatik KS2</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <a class="menu-link" href="#projekte">
-                        <span class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l4 4h-3v12h-2v-12h-3z"/></svg></span>
-                        Projekte
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M4 4h16v2h-16zM4 8h10v2h-10z"/></svg></span> Schulanwendungen</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/></svg></span> Open Source</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M3 12h18v2h-18z"/></svg></span> Vorlagen</a></li>
-                    </ul>
-                </li>
-
-                <li class="menu-item">
-                    <a class="menu-link" href="#info">
-                        <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M11 10h2v6h-2zM11 7h2v2h-2z"/></svg></span>
-                        Info
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M4 4h16v2h-16z"/></svg></span> Kontakt</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M3 6h18v12h-18z"/></svg></span> Impressum</a></li>
-                        <li><a href="#"><span class="sicon"><svg viewBox="0 0 24 24"><path d="M12 2l9 21h-18z"/></svg></span> Version</a></li>
-                    </ul>
-                </li>
+                <!-- Menü wird dynamisch aus menuConfig generiert -->
             </ul>
         </nav>
     
@@ -222,7 +343,192 @@
     </details> 
     
     <script src="/Informatik_AG_10/js/script.js"></script>
- 
+
+    <!-- Menü-Generator aus Konfiguration -->
+    <script>
+        // Globale Login-Variable
+        let currentUser = null;
+
+        // Lade Accounts aus JSON
+        async function loadAccounts() {
+            try {
+                const response = await fetch('/Informatik_AG_10/config/accounts.json');
+                const data = await response.json();
+                return data.accounts;
+            } catch (error) {
+                console.error('Fehler beim Laden der Accounts:', error);
+                return [];
+            }
+        }
+
+        // Login-Funktion
+        async function handleLogin(username, password) {
+            const accounts = await loadAccounts();
+            const user = accounts.find(acc => acc.username === username && acc.password === password);
+            
+            if (user) {
+                currentUser = { ...user };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                updateLoginUI();
+                return { success: true, message: 'Erfolgreich angemeldet!' };
+            } else {
+                return { success: false, message: 'Benutzername oder Passwort falsch!' };
+            }
+        }
+
+        // Logout-Funktion
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateLoginUI();
+        }
+
+        // UI aktualisieren
+        function updateLoginUI() {
+            const loginForm = document.getElementById('login-form');
+            const userInfo = document.getElementById('login-user-info');
+            const statusMsg = document.getElementById('login-status-msg');
+
+            if (currentUser) {
+                loginForm.style.display = 'none';
+                userInfo.style.display = 'block';
+                userInfo.innerHTML = `
+                    <strong>Angemeldet als:</strong>
+                    ${currentUser.name} (${currentUser.username})
+                    <br><small>Rolle: ${currentUser.role}</small>
+                    <button class="logout-btn" onclick="handleLogout()">Abmelden</button>
+                `;
+                statusMsg.style.display = 'none';
+            } else {
+                loginForm.style.display = 'block';
+                userInfo.style.display = 'none';
+                statusMsg.style.display = 'none';
+            }
+        }
+
+        // Initialisierung beim Laden
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prüfe ob Nutzer bereits angemeldet ist
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+            }
+
+            const menuContainer = document.querySelector('.menu');
+            if (!menuContainer) return;
+
+            // Leere das alte Menü
+            menuContainer.innerHTML = '';
+
+            // Generiere das Menü aus der Konfiguration
+            menuConfig.items.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'menu-item';
+                
+                // Menü-Link
+                const link = document.createElement('a');
+                link.className = 'menu-link' + (index === 0 ? ' active' : '');
+                link.href = item.href;
+                link.style.cursor = 'pointer';
+                
+                const icon = document.createElement('span');
+                icon.className = 'icon';
+                
+                const label = document.createElement('span');
+                label.textContent = item.label;
+                
+                link.appendChild(icon);
+                link.appendChild(label);
+                li.appendChild(link);
+
+                // Spezielle Behandlung für Login
+                if (item.id === 'login') {
+                    link.href = 'javascript:void(0)';
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        const dropdown = li.querySelector('.login-dropdown');
+                        dropdown.classList.toggle('show');
+                    };
+
+                    const loginDropdown = document.createElement('div');
+                    loginDropdown.className = 'login-dropdown';
+                    
+                    loginDropdown.innerHTML = `
+                        <div id="login-status-msg" class="login-status" style="display: none;"></div>
+                        <div id="login-user-info" style="display: none;"></div>
+                        <form id="login-form" class="login-form" onsubmit="handleLoginSubmit(event)">
+                            <input type="text" id="username" placeholder="Benutzername" required>
+                            <input type="password" id="password" placeholder="Passwort" required>
+                            <button type="submit">Anmelden</button>
+                        </form>
+                    `;
+                    
+                    li.appendChild(loginDropdown);
+                } else if (item.submenu && item.submenu.length > 0) {
+                    // Submenu für andere Items
+                    const submenu = document.createElement('ul');
+                    submenu.className = 'submenu';
+                    
+                    item.submenu.forEach(subitem => {
+                        const subli = document.createElement('li');
+                        const sublink = document.createElement('a');
+                        sublink.href = subitem.href;
+                        
+                        const sicon = document.createElement('span');
+                        sicon.className = 'sicon';
+                        sicon.innerHTML = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>';
+                        
+                        const sublabel = document.createElement('span');
+                        sublabel.textContent = subitem.label;
+                        
+                        sublink.appendChild(sicon);
+                        sublink.appendChild(sublabel);
+                        subli.appendChild(sublink);
+                        submenu.appendChild(subli);
+                    });
+                    
+                    li.appendChild(submenu);
+                }
+
+                menuContainer.appendChild(li);
+            });
+
+            // Initialisiere Login-UI
+            updateLoginUI();
+
+            // Schließe Dropdown wenn anderswo geklickt wird
+            document.addEventListener('click', function(event) {
+                const loginItem = document.querySelector('.menu-item #login-form');
+                if (loginItem && !event.target.closest('.menu-item')) {
+                    const dropdown = document.querySelector('.login-dropdown');
+                    if (dropdown) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+        });
+
+        // Login-Submit Handler
+        function handleLoginSubmit(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            handleLogin(username, password).then(result => {
+                const statusMsg = document.getElementById('login-status-msg');
+                statusMsg.style.display = 'block';
+                statusMsg.textContent = result.message;
+                statusMsg.className = 'login-status ' + (result.success ? 'success' : 'error');
+
+                if (result.success) {
+                    document.getElementById('login-form').reset();
+                    setTimeout(() => {
+                        document.querySelector('.login-dropdown').classList.remove('show');
+                    }, 1000);
+                }
+            });
+        }
+    </script>
 
    </body>
 </html>
