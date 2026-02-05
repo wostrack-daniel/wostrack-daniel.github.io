@@ -322,4 +322,98 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof updateLoginUI === 'function') updateLoginUI();
 });
 
+// --- Google Identity Services integration ---
+const GOOGLE_CLIENT_ID = '792356947236-n9obcs36qhpf1fh0drjequmkka01n7le.apps.googleusercontent.com';
+
+function parseJwt (token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
+function handleGoogleCredential(response) {
+    const payload = parseJwt(response.credential);
+    if (!payload) {
+        alert('Fehler beim Lesen der Google-Antwort.');
+        return;
+    }
+
+    const ginfo = {
+        sub: payload.sub,
+        email: payload.email,
+        name: payload.name,
+        picture: payload.picture
+    };
+
+    if (currentUser) {
+        // link to existing user
+        currentUser.googleLinked = true;
+        currentUser.google = ginfo;
+        if (!currentUser.avatar && ginfo.picture) currentUser.avatar = ginfo.picture;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateLoginUI();
+        alert('Ihr Konto wurde mit Google verknüpft.');
+    } else {
+        // create a new session from Google profile (frontend-only)
+        const newUser = {
+            name: ginfo.name || ginfo.email,
+            username: (ginfo.email || '').split('@')[0],
+            avatar: ginfo.picture || '',
+            role: 'Schüler',
+            googleLinked: true,
+            google: ginfo
+        };
+        currentUser = newUser;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateLoginUI();
+        // go to account page if not already there
+        if (!window.location.pathname.endsWith('/html/account.html')) {
+            window.location.href = '/Informatik_AG_10/html/account.html';
+        } else {
+            alert('Mit Google angemeldet (Frontend-Demo).');
+        }
+    }
+}
+
+function initGoogle() {
+    // wait for google.accounts to be available
+    let tries = 0;
+    const t = setInterval(() => {
+        if (window.google && google.accounts && google.accounts.id) {
+            clearInterval(t);
+            google.accounts.id.initialize({
+                client_id: GOOGLE_CLIENT_ID,
+                callback: handleGoogleCredential,
+                auto_select: false
+            });
+
+            // render signin button in login prompt (if present)
+            const loginContainer = document.getElementById('google-signin-login');
+            if (loginContainer) {
+                google.accounts.id.renderButton(loginContainer, { theme: 'outline', size: 'large', type: 'standard' });
+            }
+
+            // render small button in account link tab
+            const linkContainer = document.getElementById('google-signin-link');
+            if (linkContainer) {
+                google.accounts.id.renderButton(linkContainer, { theme: 'outline', size: 'large', type: 'standard' });
+            }
+        }
+        tries++;
+        if (tries > 30) clearInterval(t);
+    }, 200);
+}
+
+// Start GSI after load
+document.addEventListener('DOMContentLoaded', function() {
+    initGoogle();
+});
+
 // ====== ENDE LOGIN-FUNKTIONEN ======

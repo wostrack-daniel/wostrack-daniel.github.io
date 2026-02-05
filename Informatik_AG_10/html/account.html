@@ -169,6 +169,9 @@
             <h2>Bitte melden Sie sich an</h2>
             <p>Um Ihre Profilseite zu sehen, müssen Sie sich zunächst anmelden.</p>
             <a href="/Informatik_AG_10/html/index.html" class="btn btn-primary">Zur Startseite</a>
+            <div style="margin-top:18px;">
+                <div id="google-signin-login"></div>
+            </div>
         </div>
 
         <!-- Profil-Inhalt (wird angezeigt, wenn angemeldet) -->
@@ -187,8 +190,15 @@
                 </div>
             </div>
 
+            <!-- Tabs -->
+            <div style="display:flex; gap:8px; margin:18px 0;">
+                <button id="tab-profile" class="btn btn-primary" style="padding:8px 14px;" onclick="switchAccountTab('profile')">Profil</button>
+                <button id="tab-google" class="btn" style="padding:8px 14px; background:#f1f1f1;" onclick="switchAccountTab('google')">Google</button>
+            </div>
+
             <!-- Profil-Details -->
             <div class="account-content">
+                <div id="account-tab-profile">
                 <!-- Informationen -->
                 <div class="account-section">
                     <h2>Persönliche Informationen</h2>
@@ -222,6 +232,17 @@
                     <p style="color: #666; margin-bottom: 15px;">Optionen zur Verwaltung Ihres Accounts</p>
                     <button class="btn btn-danger" onclick="deleteAccount()">Account löschen</button>
                 </div>
+                </div>
+
+                <!-- Google Tab -->
+                <div id="account-tab-google" style="display:none;">
+                    <h2>Google Verknüpfung</h2>
+                    <p style="color:#666; margin-bottom:12px;">Verknüpfen Sie Ihr Profil mit einem Google-Konto.</p>
+                    <div style="display:flex; gap:12px; align-items:center;">
+                        <div id="google-signin-link"></div>
+                        <div id="google-link-status" style="color:#666; font-size:14px;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -229,6 +250,9 @@
     <!-- Scripts -->
     <script src="/Informatik_AG_10/js/login.js"></script>
     <script src="/Informatik_AG_10/js/header-loader.js"></script>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script>
         // Funktion zum Aktualisieren des Profils
@@ -304,6 +328,32 @@
                 updateProfileDisplay();
             }
         });
+
+        // Tab switch function (shows profile or google tab)
+        function switchAccountTab(tab) {
+            const profileTab = document.getElementById('account-tab-profile');
+            const googleTab = document.getElementById('account-tab-google');
+            const tabProfileBtn = document.getElementById('tab-profile');
+            const tabGoogleBtn = document.getElementById('tab-google');
+
+            if (!profileTab || !googleTab || !tabProfileBtn || !tabGoogleBtn) return;
+
+            if (tab === 'google') {
+                profileTab.style.display = 'none';
+                googleTab.style.display = 'block';
+                tabProfileBtn.classList.remove('btn-primary');
+                tabProfileBtn.style.background = '#f1f1f1';
+                tabGoogleBtn.classList.add('btn-primary');
+                tabGoogleBtn.style.background = '';
+            } else {
+                profileTab.style.display = 'block';
+                googleTab.style.display = 'none';
+                tabProfileBtn.classList.add('btn-primary');
+                tabProfileBtn.style.background = '';
+                tabGoogleBtn.classList.remove('btn-primary');
+                tabGoogleBtn.style.background = '#f1f1f1';
+            }
+        }
     </script>
 </body>
 </html>
