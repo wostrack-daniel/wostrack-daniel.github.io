@@ -29,7 +29,8 @@
 
             <!-- Filter System -->
             <div class="filter-section">
-                        <button id="filter-reset-btn" class="filter-reset" title="Filter zurücksetzen">← Alle Filter zurücksetzen</button>
+                <button id="filter-reset-btn" class="filter-reset" title="Filter zurücksetzen">← Alle Filter zurücksetzen</button>
+                <button id="selection-toggle-btn" class="selection-toggle" title="Auswahlmodus">☑️ Auswahl</button>
                 <div class="filter-group">
                     <span class="filter-label">Kapitel:</span>
                     <button class="filter-btn filter-btn-active" data-filter="all">Alle</button>
@@ -60,7 +61,7 @@
         <div id="filter-view" class="filter-view" style="display: none;"></div>
 
         <div class="chapters-container">
-            <details class="chapter-card">
+            <details class="chapter-card" data-chapter="kapitel-1">
                 <summary class="chapter-summary">
                     <img src="/Informatik_AG_10/assets/images/icon/fold 2.png" alt="Kapitel Icon" class="chapter-icon">
                     <h2 class="chapter-title">Kapitel I: Algorithmen</h2>
@@ -141,7 +142,7 @@
                 </div>
             </details>
 
-            <details class="chapter-card">
+            <details class="chapter-card" data-chapter="kapitel-2">
                 <summary class="chapter-summary">
                     <img src="/Informatik_AG_10/assets/images/icon/fold 2.png" alt="Kapitel Icon" class="chapter-icon">
                     <h2 class="chapter-title">Kapitel II: Daten und Codierung</h2>
@@ -194,7 +195,7 @@
                 </div>
             </details>
 
-            <details class="chapter-card">
+            <details class="chapter-card" data-chapter="kapitel-3">
                 <summary class="chapter-summary">
                     <img src="/Informatik_AG_10/assets/images/icon/fold 2.png" alt="Kapitel Icon" class="chapter-icon">
                     <h2 class="chapter-title">Kapitel III: Unterprogramme und Strings</h2>

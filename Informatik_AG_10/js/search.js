@@ -3,6 +3,8 @@
 // Globale Filter-Variablen
 let activeChapterFilter = 'all';
 let activeFileTypeFilter = 'all';
+let selectionMode = false;
+let selectedItems = new Set();
 
 // Sammle alle durchsuchbaren Dateien/Inhalte von der Seite
 function collectSearchableContent() {
@@ -80,6 +82,162 @@ function matchesFilters(item) {
     const chapterMatch = activeChapterFilter === 'all' || item.chapterId === activeChapterFilter;
     const typeMatch = activeFileTypeFilter === 'all' || item.type === activeFileTypeFilter;
     return chapterMatch && typeMatch;
+}
+
+// Toggle selection mode: inject/remove checkboxes
+function toggleSelectionMode() {
+    selectionMode = !selectionMode;
+    document.body.classList.toggle('selection-mode', selectionMode);
+    if (selectionMode) {
+        addSelectionCheckboxes();
+        showSelectionBar();
+    } else {
+        removeSelectionCheckboxes();
+        hideSelectionBar();
+    }
+}
+
+function addSelectionCheckboxes() {
+    // add chapter checkboxes
+    document.querySelectorAll('.chapter-card').forEach(card => {
+        const summary = card.querySelector('.chapter-summary');
+        if (summary && !summary.querySelector('.chapter-checkbox')) {
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.className = 'chapter-checkbox';
+            cb.dataset.chapter = card.dataset.chapter || '';
+            cb.addEventListener('change', onChapterCheckboxChange);
+            summary.insertBefore(cb, summary.firstChild);
+        }
+        // add file checkboxes inside chapter
+        card.querySelectorAll('.file-link').forEach(a => {
+            if (!a.querySelector('.select-checkbox')) {
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.className = 'select-checkbox';
+                cb.dataset.href = a.getAttribute('href');
+                cb.dataset.title = a.textContent.trim();
+                cb.dataset.chapter = card.dataset.chapter || '';
+                cb.addEventListener('change', onFileCheckboxChange);
+                a.insertBefore(cb, a.firstChild);
+            }
+        });
+    });
+
+    // add checkboxes for current filter-view results
+    document.querySelectorAll('.filter-result').forEach(a => {
+        if (!a.querySelector('.select-checkbox')) {
+            const cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.className = 'select-checkbox';
+            cb.dataset.href = a.getAttribute('href');
+            cb.dataset.title = a.textContent.trim();
+            a.insertBefore(cb, a.firstChild);
+            cb.addEventListener('change', onFileCheckboxChange);
+        }
+    });
+
+    // add checkboxes for current search-results
+    document.querySelectorAll('.search-result-item').forEach(a => {
+        if (!a.querySelector('.select-checkbox')) {
+            const cb = document.createElement('input');
+            cb.type = 'checkbox'; cb.className = 'select-checkbox';
+            const href = a.getAttribute('href') || a.querySelector('a')?.getAttribute('href') || '';
+            cb.dataset.href = href;
+            cb.dataset.title = a.querySelector('.search-result-title')?.textContent || a.textContent.trim();
+            a.insertBefore(cb, a.firstChild);
+            cb.addEventListener('change', onFileCheckboxChange);
+        }
+    });
+}
+
+function removeSelectionCheckboxes() {
+    document.querySelectorAll('.select-checkbox').forEach(cb => cb.remove());
+    document.querySelectorAll('.chapter-checkbox').forEach(cb => cb.remove());
+    selectedItems.clear();
+    updateSelectionCount();
+}
+
+function onChapterCheckboxChange(e) {
+    const checked = e.target.checked;
+    const chapterId = e.target.dataset.chapter;
+    // toggle all select-checkboxes with matching data-chapter
+    document.querySelectorAll('.select-checkbox').forEach(cb => {
+        if (cb.dataset.chapter === chapterId) {
+            cb.checked = checked;
+            const key = cb.dataset.href || cb.dataset.title;
+            if (checked) selectedItems.add(key); else selectedItems.delete(key);
+        }
+    });
+    updateSelectionCount();
+}
+
+function onFileCheckboxChange(e) {
+    const cb = e.target;
+    const key = cb.dataset.href || cb.dataset.title;
+    if (cb.checked) selectedItems.add(key); else selectedItems.delete(key);
+    updateSelectionCount();
+}
+
+function updateSelectionCount() {
+    const countEl = document.getElementById('selection-count');
+    if (countEl) countEl.textContent = selectedItems.size + '';
+}
+
+function showSelectionBar() {
+    let bar = document.getElementById('selection-bar');
+    if (!bar) {
+        bar = document.createElement('div');
+        bar.id = 'selection-bar';
+        bar.className = 'selection-bar';
+        bar.innerHTML = '<div>Ausgewählt: <strong id="selection-count">0</strong></div>' +
+            '<div class="selection-actions">' +
+            '<button id="download-selected">Herunterladen</button>' +
+            '<button id="export-txt" class="primary">Als TXT exportieren</button>' +
+            '</div>';
+        const container = document.querySelector('.search-section-inner') || document.body;
+        container.parentNode.insertBefore(bar, container.nextSibling);
+        document.getElementById('download-selected').addEventListener('click', downloadSelected);
+        document.getElementById('export-txt').addEventListener('click', exportSelectedTXT);
+    }
+}
+
+function hideSelectionBar() {
+    const bar = document.getElementById('selection-bar');
+    if (bar) bar.remove();
+}
+
+function downloadSelected() {
+    if (selectedItems.size === 0) return alert('Keine Dateien ausgewählt.');
+    // selectedItems contains keys (href or title). We'll try to download anchors matching href
+    const hrefs = Array.from(selectedItems);
+    hrefs.forEach(href => {
+        try {
+            const a = document.createElement('a');
+            a.href = href;
+            a.download = '';
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        } catch (e) { console.error('Download failed', e); }
+    });
+}
+
+function exportSelectedTXT() {
+    if (selectedItems.size === 0) return alert('Keine Dateien ausgewählt.');
+    const lines = [];
+    // try to map keys back to anchors for titles
+    selectedItems.forEach(key => {
+        // key is href, find anchor
+        const el = document.querySelector(`a[href="${key}"]`);
+        const title = el ? (el.textContent.trim() || el.getAttribute('href')) : key;
+        lines.push(title + ' - ' + key);
+    });
+    const blob = new Blob([lines.join('\n')], {type: 'text/plain;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'selected-files.txt'; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
 }
 
 // Suche durchführen mit Filtern
@@ -262,6 +420,10 @@ document.addEventListener('DOMContentLoaded', function() {
             resetFilters();
         });
     }
+
+    // Selection toggle
+    const selToggle = document.getElementById('selection-toggle-btn');
+    if (selToggle) selToggle.addEventListener('click', function(e) { e.preventDefault(); toggleSelectionMode(); });
     
     // Schließe Suchergebnisse beim Klick außerhalb
     document.addEventListener('click', function(e) {
