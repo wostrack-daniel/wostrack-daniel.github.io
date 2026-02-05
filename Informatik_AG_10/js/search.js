@@ -170,7 +170,70 @@ function handleFilter(event) {
     const searchInput = document.getElementById('search-input');
     if (searchInput && searchInput.value) {
         performSearch(searchInput.value);
+    } else {
+        // wenn kein Suchbegriff, zeige gefilterte Einträge (ohne Kapitelüberschriften)
+        showFilteredEntries();
     }
+}
+
+// Zeige gefilterte Einträge in der Filter-View (Kapitel ausblenden)
+function showFilteredEntries() {
+    const searchData = collectSearchableContent();
+    const results = searchData.filter(item => matchesFilters(item));
+    renderFilterView(results);
+}
+
+function renderFilterView(items) {
+    const view = document.getElementById('filter-view');
+    const chapters = document.querySelector('.chapters-container');
+    if (!view) return;
+
+    if (!items || items.length === 0) {
+        view.innerHTML = '<div class="filter-empty">Keine Einträge für diese Filter.</div>';
+    } else {
+        let html = '<div class="filter-results-list">';
+        items.forEach(item => {
+            const icon = getIconForType(item.type);
+            html += `
+                <a class="file-link filter-result" href="${item.href}" title="${item.title}" download>
+                    <span class="file-icon">${icon}</span>
+                    <span class="file-name">${item.title}</span>
+                    <span class="file-category">${item.category}</span>
+                </a>
+            `;
+        });
+        html += '</div>';
+        view.innerHTML = html;
+    }
+
+    // Sichtbarkeit: Kapitel ausblenden, Filter-View zeigen
+    if (chapters) chapters.style.display = 'none';
+    view.style.display = 'block';
+}
+
+// Reset alle Filter und Ansicht zurücksetzen
+function resetFilters() {
+    activeChapterFilter = 'all';
+    activeFileTypeFilter = 'all';
+
+    // Buttons zurücksetzen
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-btn-active'));
+    document.querySelectorAll('.filter-group').forEach(group => {
+        const allBtn = group.querySelector('[data-filter="all"]');
+        if (allBtn) allBtn.classList.add('filter-btn-active');
+    });
+
+    // Ansicht zurück
+    const view = document.getElementById('filter-view');
+    const chapters = document.querySelector('.chapters-container');
+    if (view) view.style.display = 'none';
+    if (chapters) chapters.style.display = '';
+
+    // leere Suchergebnisse
+    const searchResultsContainer = document.getElementById('search-results');
+    const searchInput = document.getElementById('search-input');
+    if (searchResultsContainer) searchResultsContainer.innerHTML = '';
+    if (searchInput) searchInput.value = '';
 }
 
 // Initialisierung
@@ -190,6 +253,15 @@ document.addEventListener('DOMContentLoaded', function() {
     filterBtns.forEach(btn => {
         btn.addEventListener('click', handleFilter);
     });
+    
+    // Filter-Reset Button
+    const resetBtn = document.getElementById('filter-reset-btn');
+    if (resetBtn) {
+        resetBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            resetFilters();
+        });
+    }
     
     // Schließe Suchergebnisse beim Klick außerhalb
     document.addEventListener('click', function(e) {

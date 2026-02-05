@@ -435,6 +435,33 @@ summary::-webkit-details-marker { display: none; }
     align-items: center;
 }
 
+.filter-reset {
+    background: transparent;
+    border: none;
+    color: #0066cc;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 160ms ease, color 160ms ease;
+}
+
+.filter-reset:hover {
+    background: rgba(0,102,204,0.06);
+}
+
+.filter-view {
+    max-width: 1200px;
+    margin: 18px auto;
+    padding: 0 20px 20px 20px;
+}
+
+.filter-results-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.filter-result { display:flex; align-items:center; gap:12px; padding:12px 14px; background:#fff; border:1px solid #eee; border-radius:8px; text-decoration:none; color:#222; }
+.filter-result .file-icon { font-size:20px; }
+.filter-result .file-name { font-weight:600; }
+.filter-empty { padding:18px; color:#666; background:#fff; border:1px solid #eee; border-radius:8px; }
+
 .filter-group {
     display: flex;
     align-items: center;

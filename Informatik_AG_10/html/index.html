@@ -29,6 +29,7 @@
 
             <!-- Filter System -->
             <div class="filter-section">
+                        <button id="filter-reset-btn" class="filter-reset" title="Filter zurücksetzen">← Alle Filter zurücksetzen</button>
                 <div class="filter-group">
                     <span class="filter-label">Kapitel:</span>
                     <button class="filter-btn filter-btn-active" data-filter="all">Alle</button>
@@ -54,6 +55,9 @@
             <h1 class="page-title">Informatik Brückenkurs</h1>
             <p class="page-subtitle">Klasse 10 - Lernmaterialien und Aufgaben</p>
         </div>
+
+        <!-- Filter View: wird angezeigt, wenn Filter aktiv sind -->
+        <div id="filter-view" class="filter-view" style="display: none;"></div>
 
         <div class="chapters-container">
             <details class="chapter-card">
